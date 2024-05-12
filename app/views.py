@@ -1,113 +1,120 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
+from django.http import Http404
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from .models import *
 from .serializers import *
 
-@api_view(['GET', 'POST'])
-def produk_list(request):
-    if request.method == 'GET':
-        produks = Produk.objects.all()
-        serializer = ProdukSerializer(produks, many=True)
+class ProdukList(APIView):
+    def get(self, request, format=None):
+        produk = Produk.objects.all()
+        serializer = ProdukSerializer(produk, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = ProdukSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def produk_detail(request, pk):
-    try:
-        produk = produk.objects.get(pk=pk)
-    except produk.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class ProdukDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Produk.objects.get(pk=pk)
+        except Produk.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk, format=None):
+        produk = self.get_object(pk)
         serializer = ProdukSerializer(produk)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk, format=None):
+        produk = self.get_object(pk)
         serializer = ProdukSerializer(produk, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        produk = self.get_object(pk)
         produk.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-@api_view(['GET', 'POST'])
-def pelanggan_list(request):
-    if request.method == 'GET':
-        pelanggans= Pelanggan.objects.all()
-        serializer = PelangganSerializer(pelanggans, many=True)
+class PelangganList(APIView):
+    def get(self, request, format=None):
+        pelanggan = Pelanggan.objects.all()
+        serializer = PelangganSerializer(pelanggan, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = PelangganSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def pelanggan_detail(request, pk):
-    try:
-        pelanggan = pelanggan.objects.get(pk=pk)
-    except pelanggan.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class PelangganDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Pelanggan.objects.get(pk=pk)
+        except Pelanggan.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk, format=None):
+        pelanggan = self.get_object(pk)
         serializer = PelangganSerializer(pelanggan)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk, format=None):
+        pelanggan = self.get_object(pk)
         serializer = PelangganSerializer(pelanggan, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        pelanggan = self.get_object(pk)
         pelanggan.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-@api_view(['GET', 'POST'])
-def pesan_list(request):
-    if request.method == 'GET':
-        pesans= Pesan.objects.all()
-        serializer = PesanSerializer(pesans, many=True)
+class PesanList(APIView):
+    def get(self, request, format=None):
+        pesan = Pesan.objects.all()
+        serializer = PesanSerializer(pesan, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = PesanSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def pesan_detail(request, pk):
-    try:
-        pesan = pesan.objects.get(pk=pk)
-    except pesan.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class PesanDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Pesan.objects.get(pk=pk)
+        except Pesan.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk, format=None):
+        pesan = self.get_object(pk)
         serializer = PesanSerializer(pesan)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk, format=None):
+        pesan = self.get_object(pk)
         serializer = PesanSerializer(pesan, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        pesan = self.get_object(pk)
         pesan.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
